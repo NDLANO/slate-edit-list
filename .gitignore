@@ -41,3 +41,5 @@ jspm_packages
 
 dist
 example/bundle.js
+
+example/bundle\.js\.tmp-browserify-89545814073551865953

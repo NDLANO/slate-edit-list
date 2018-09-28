@@ -1,7 +1,7 @@
 {
   "name": "ndla-slate-edit-list",
   "description": "A Slate plugin to handle keyboard events in lists.",
-  "version": "0.1.0",
+  "version": "0.12.3",
   "license": "Apache-2.0",
   "repository": "git://github.com/NDLANO/slate-edit-list.git",
   "main": "./dist/index.js",
@@ -24,7 +24,7 @@
     "babel-preset-flow": "^6.23.0",
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
-    "babelify": "^10.0.0",
+    "babelify": "^8.0.0",
     "browserify": "^16.2.0",
     "eslint": "^5.6.0",
     "eslint-config-gitbook": "4.0.1",
