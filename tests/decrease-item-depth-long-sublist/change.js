@@ -1,3 +1,3 @@
-export default function(plugin, change) {
-    return change.call(plugin.changes.decreaseItemDepth);
+export default function(editor) {
+  return editor.decreaseItemDepth();
 }

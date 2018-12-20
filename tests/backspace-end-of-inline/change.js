@@ -1,4 +1,4 @@
-export default function(plugin, change) {
+export default function(editor) {
     plugin.onKeyDown(
         {
             preventDefault: () => {},

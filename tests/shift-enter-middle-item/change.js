@@ -1,6 +1,6 @@
 import expect from 'expect';
 
-export default function(plugin, change) {
+export default function(editor) {
     const ret = plugin.onKeyDown(
         {
             preventDefault: () => {},

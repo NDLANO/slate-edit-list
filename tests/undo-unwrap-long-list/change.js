@@ -1,14 +1,15 @@
-import expect from 'expect';
+import expect from "expect";
 
-export default function(plugin, change) {
-    const initialText = change.value.startBlock.text;
-    const initialSelection = change.value.selection;
+export default function(editor) {
+  const initialText = editor.value.startBlock.text;
+  const initialSelection = editor.value.selection;
 
-    change.call(plugin.changes.unwrapList).undo();
+  editor.unwrapList();
+  editor.undo();
 
-    // Back to previous cursor position
-    expect(change.value.startBlock.text).toEqual(initialText);
-    expect(change.value.selection.toJS()).toEqual(initialSelection.toJS());
+  // Back to previous cursor position
+  expect(editor.value.startBlock.text).toEqual(initialText);
+  expect(editor.value.selection.toJS()).toEqual(initialSelection.toJS());
 
-    return change;
+  return editor;
 }
