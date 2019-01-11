@@ -14,8 +14,7 @@ const plugins = [plugin];
 
 function renderNode(props: *) {
     const { node, attributes, children, editor } = props;
-    const isCurrentItem = plugin.utils
-        .getItemsAtRange(editor.value)
+    const isCurrentItem = editor.getItemsAtRange()
         .contains(node);
 
     switch (node.type) {
@@ -110,7 +109,7 @@ class Example extends React.Component<*, *> {
             <div>
                 {this.renderToolbar()}
                 <Editor
-                    placeholder={'Enter some text...'}
+                    placeholder="Enter some text..."
                     plugins={plugins}
                     value={this.state.value}
                     onChange={this.onChange}

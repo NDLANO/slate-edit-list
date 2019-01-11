@@ -1,23 +1,15 @@
 import expect from 'expect';
 
-export default function(plugin, change) {
-    const { value } = change;
-    const selectedBlock = value.document.getDescendant('_selection_key');
-    change.collapseToStartOf(selectedBlock);
-
-    plugin.onKeyDown(
-        {
-            preventDefault: () => {},
-            stopPropagation: () => {},
-            key: 'Backspace'
-        },
-        change,
-        {}
-    );
+export default function(editor) {
+    editor.run('onKeyDown', {
+        preventDefault: () => {},
+        stopPropagation: () => {},
+        key: 'Backspace'
+    });
 
     // Selection check
-    expect(change.value.startBlock.text).toEqual('Second item');
-    expect(change.value.selection.anchorOffset).toEqual(0);
-    expect(change.value.selection.isCollapsed).toBe(true);
-    return change;
+    expect(editor.value.startBlock.text).toEqual('Second item');
+    expect(editor.value.selection.anchor.offset).toEqual(0);
+    expect(editor.value.selection.isCollapsed).toBe(true);
+    return editor;
 }

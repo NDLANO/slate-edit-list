@@ -1,26 +1,29 @@
-import expect from 'expect';
+import expect from "expect";
 
-export default function(plugin, change) {
-    const { value } = change;
-    const selectedBlock = value.document.getDescendant('_selection_key');
+export default function(editor) {
+  editor.splitListItem();
 
-    change.collapseToStartOf(selectedBlock).move(2); // It|em 1
+  // check new selection
+  const selectedNode = editor.value.document.getTexts().get(2);
+  const selectedNodePath = editor.value.document
+    .getPath(selectedNode.key)
+    .toJS();
 
-    plugin.changes.splitListItem(change);
+  expect(editor.value.selection.toJS()).toMatchObject({
+    object: "selection",
+    anchor: {
+      object: "point",
+      offset: 0,
+      path: selectedNodePath
+    },
+    focus: {
+      object: "point",
+      offset: 0,
+      path: selectedNodePath
+    },
+    isFocused: true,
+    marks: null
+  });
 
-    // check new selection
-    const selectedNode = change.value.document.getTexts().get(2);
-
-    expect(change.value.selection.toJS()).toEqual({
-        anchorKey: selectedNode.key,
-        anchorOffset: 0,
-        focusKey: selectedNode.key,
-        focusOffset: 0,
-        isBackward: false,
-        isFocused: false,
-        marks: null,
-        object: 'range'
-    });
-
-    return change;
+  return editor;
 }

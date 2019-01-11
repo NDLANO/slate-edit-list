@@ -1,11 +1,6 @@
 import expect from 'expect';
 
-export default function(plugin, change) {
-    const { value } = change;
-    const selectedBlock = value.document.getDescendant('cursor');
-
-    change.moveToRangeOf(selectedBlock);
-
-    const currentItem = plugin.utils.getCurrentItem(change.value);
+export default function(editor) {
+    const currentItem = editor.getCurrentItem();
     expect(currentItem.key).toBe('current_item');
 }

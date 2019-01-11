@@ -1,17 +1,9 @@
-export default function(plugin, change) {
-    const { value } = change;
-    const selectedBlock = value.document.getDescendant('_selection_key');
-    change.collapseToStartOf(selectedBlock);
+export default function(editor) {
+    editor.run('onKeyDown', {
+        preventDefault: () => {},
+        stopPropagation: () => {},
+        key: 'Backspace'
+    });
 
-    plugin.onKeyDown(
-        {
-            preventDefault: () => {},
-            stopPropagation: () => {},
-            key: 'Backspace'
-        },
-        change,
-        {}
-    );
-
-    return change;
+    return editor;
 }

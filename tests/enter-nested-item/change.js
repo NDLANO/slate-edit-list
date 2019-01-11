@@ -1,11 +1,7 @@
-export default function(plugin, change) {
-    return plugin.onKeyDown(
-        {
-            preventDefault: () => {},
-            stopPropagation: () => {},
-            key: 'Enter'
-        },
-        change,
-        {}
-    );
+export default function(editor) {
+    return editor.run('onKeyDown', {
+        preventDefault: () => {},
+        stopPropagation: () => {},
+        key: 'Enter'
+    });
 }

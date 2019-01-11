@@ -1,25 +1,15 @@
-// const expect = require('expect');
+import expect from 'expect';
 
-export default function(plugin, change) {
-    const { value } = change;
-    const { selection } = value;
+export default function(editor) {
+    const initialText = editor.value.startBlock.text;
+    const initialSelection = editor.value.selection;
 
-    const range = selection.merge({
-        anchorKey: '_selection_key',
-        anchorOffset: 2,
-        focusKey: '_selection_key',
-        focusOffset: 2
-    });
+    editor.splitListItem();
+    editor.undo();
 
-    change
-        .select(range)
-        .call(plugin.changes.splitListItem)
-        .undo();
-
-    // TODO fix undo, and test selection
     // Back to previous cursor position
-    // expect(value.startBlock.text).toEqual(initialText);
-    // expect(value.selection.toJS()).toEqual(initialSelection.toJS());
+    expect(editor.value.startBlock.text).toEqual(initialText);
+    expect(editor.value.selection.toJS()).toEqual(initialSelection.toJS());
 
-    return change;
+    return editor;
 }
