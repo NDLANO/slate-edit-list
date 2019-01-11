@@ -14,8 +14,7 @@ const plugins = [plugin];
 
 function renderNode(props: *) {
     const { node, attributes, children, editor } = props;
-    const isCurrentItem = plugin.utils
-        .getItemsAtRange(editor.value)
+    const isCurrentItem = editor.getItemsAtRange()
         .contains(node);
 
     switch (node.type) {
