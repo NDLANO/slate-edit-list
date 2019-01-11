@@ -1,6 +1,6 @@
-import expect from "expect";
+import expect from 'expect';
 
 export default function(editor) {
-  const currentItem = editor.getCurrentItem(editor.value);
-  expect(currentItem.key).toBe("current_item");
+    const currentItem = editor.getCurrentItem();
+    expect(currentItem.key).toBe('current_item');
 }

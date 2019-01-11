@@ -13,6 +13,7 @@ export default (
                     <ul_list>
                         <list_item>
                             <paragraph>
+                                <text />
                                 <cursor />
                             </paragraph>
                         </list_item>

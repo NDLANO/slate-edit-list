@@ -1,3 +1,3 @@
 export default function(editor) {
-  return editor.splitListItem;
+    return editor.splitListItem();
 }
