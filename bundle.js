@@ -1408,8 +1408,10 @@ function joinAdjacentLists(opts, node, editor, next) {
                     second = _pair[1];
 
                 var updatedSecond = change.value.document.getDescendant(second.key);
-                updatedSecond.nodes.forEach(function (secondNode, index) {
-                    change.moveNodeByKey(secondNode.key, first.key, first.nodes.size + index);
+                change.withoutSaving(function () {
+                    updatedSecond.nodes.forEach(function (secondNode, index) {
+                        change.moveNodeByKey(secondNode.key, first.key, first.nodes.size + index);
+                    });
                 });
 
                 change.removeNodeByKey(second.key);
@@ -1448,7 +1450,9 @@ function schema(opts) {
 
             normalize: normalize({
                 parent_type_invalid: function parent_type_invalid(change, context) {
-                    return change.unwrapBlockByKey(context.node.key);
+                    return change.withoutSaving(function () {
+                        return change.unwrapBlockByKey(context.node.key);
+                    });
                 },
                 child_object_invalid: function child_object_invalid(change, context) {
                     return wrapChildrenInDefaultBlock(opts, change, context.node);
@@ -1463,7 +1467,9 @@ function schema(opts) {
             nodes: [{ match: { type: opts.typeItem } }],
             normalize: normalize({
                 child_type_invalid: function child_type_invalid(change, context) {
-                    return change.wrapBlockByKey(context.child.key, opts.typeItem);
+                    return change.withoutSaving(function () {
+                        return change.wrapBlockByKey(context.child.key, opts.typeItem);
+                    });
                 }
             })
         };
@@ -1491,15 +1497,19 @@ function normalize(reasons) {
  */
 function wrapChildrenInDefaultBlock(opts, change, node) {
     change.withoutNormalizing(function () {
-        change.wrapBlockByKey(node.nodes.first().key, opts.typeDefault);
+        change.withoutSaving(function () {
+            return change.wrapBlockByKey(node.nodes.first().key, opts.typeDefault);
+        });
     });
 
     var wrapper = change.value.document.getDescendant(node.key).nodes.first();
 
     // Add in the remaining items
     change.withoutNormalizing(function () {
-        node.nodes.rest().forEach(function (child, index) {
-            return change.moveNodeByKey(child.key, wrapper.key, index + 1);
+        change.withoutSaving(function () {
+            return node.nodes.rest().forEach(function (child, index) {
+                return change.moveNodeByKey(child.key, wrapper.key, index + 1);
+            });
         });
     });
 
