@@ -564,27 +564,38 @@ require('slate');
 function unwrapList(opts, editor) {
     var items = editor.getItemsAtRange();
     if (items.isEmpty()) {
-        return editor;
+        return;
     }
 
-    return editor.withoutNormalizing(function () {
+    editor.withoutNormalizing(function () {
         // Unwrap the items from their list
         items.forEach(function (item) {
             return editor.unwrapNodeByKey(item.key);
         });
 
         // Parent of the list of the items
+        // node type = 'list-item'
         var firstItem = items.first();
         var parent = editor.value.document.getParent(firstItem.key);
 
         var index = parent.nodes.findIndex(function (node) {
             return node.key === firstItem.key;
         });
+
         // Unwrap the items' children
         items.forEach(function (item) {
             return item.nodes.forEach(function (node) {
-                editor.moveNodeByKey(node.key, parent.key, index);
-                index += 1;
+                if (node.get('type') === 'list-text') {
+                    // we wrap the text in paragraph instead of list-text, before moving it out if the list
+                    var textNode = node.nodes.first();
+                    editor.wrapBlockByKey(textNode.key, 'paragraph');
+                    var paragraphNode = editor.value.document.getParent(textNode.key);
+                    editor.moveNodeByKey(paragraphNode.key, parent.key, index);
+                    index += 1;
+                } else {
+                    editor.moveNodeByKey(node.key, parent.key, index);
+                    index += 1;
+                }
             });
         });
 
@@ -592,7 +603,6 @@ function unwrapList(opts, editor) {
         items.forEach(function (item) {
             return editor.removeNodeByKey(item.key);
         });
-        return editor;
     });
 }
 exports.default = unwrapList;
