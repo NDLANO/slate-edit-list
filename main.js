@@ -12,10 +12,9 @@ import INITIAL_VALUE from './value';
 const plugin = PluginEditList();
 const plugins = [plugin];
 
-function renderNode(props: *) {
-    const { node, attributes, children, editor } = props;
-    const isCurrentItem = editor.getItemsAtRange()
-        .contains(node);
+function renderBlock(props, editor, next) {
+    const { node, attributes, children } = props;
+    const isCurrentItem = editor.getItemsAtRange().contains(node);
 
     switch (node.type) {
         case 'ul_list':
@@ -47,6 +46,7 @@ class Example extends React.Component<*, *> {
     state = {
         value: INITIAL_VALUE
     };
+    editor;
 
     renderToolbar() {
         const {
@@ -54,8 +54,8 @@ class Example extends React.Component<*, *> {
             unwrapList,
             increaseItemDepth,
             decreaseItemDepth
-        } = plugin.changes;
-        const inList = plugin.utils.isSelectionInList(this.state.value);
+        } = plugin.commands;
+        const inList = false; //plugin.queries.isSelectionInList(this.editor);
 
         return (
             <div>
@@ -92,9 +92,9 @@ class Example extends React.Component<*, *> {
         );
     }
 
-    call(change) {
+    call(command) {
         this.setState({
-            value: this.state.value.change().call(change).value
+            value: this.editor.command(command).value
         });
     }
 
@@ -109,11 +109,12 @@ class Example extends React.Component<*, *> {
             <div>
                 {this.renderToolbar()}
                 <Editor
+                    ref={editor => this.editor = editor}
                     placeholder="Enter some text..."
                     plugins={plugins}
                     value={this.state.value}
                     onChange={this.onChange}
-                    renderNode={renderNode}
+                    renderBlock={renderBlock}
                     shouldNodeComponentUpdate={props =>
                         // To update the highlighting of nodes inside the selection
                         props.node.type === 'list_item'

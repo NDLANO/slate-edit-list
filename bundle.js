@@ -51,11 +51,10 @@ var plugin = (0, _lib2.default)();
 
 var plugins = [plugin];
 
-function renderNode(props) {
+function renderBlock(props, editor, next) {
     var node = props.node,
         attributes = props.attributes,
-        children = props.children,
-        editor = props.editor;
+        children = props.children;
 
     var isCurrentItem = editor.getItemsAtRange().contains(node);
 
@@ -134,13 +133,13 @@ var Example = function (_React$Component) {
         value: function renderToolbar() {
             var _this2 = this;
 
-            var _plugin$changes = plugin.changes,
-                wrapInList = _plugin$changes.wrapInList,
-                unwrapList = _plugin$changes.unwrapList,
-                increaseItemDepth = _plugin$changes.increaseItemDepth,
-                decreaseItemDepth = _plugin$changes.decreaseItemDepth;
+            var _plugin$commands = plugin.commands,
+                wrapInList = _plugin$commands.wrapInList,
+                unwrapList = _plugin$commands.unwrapList,
+                increaseItemDepth = _plugin$commands.increaseItemDepth,
+                decreaseItemDepth = _plugin$commands.decreaseItemDepth;
 
-            var inList = plugin.utils.isSelectionInList(this.state.value);
+            var inList = false; //plugin.queries.isSelectionInList(this.editor);
 
             return _react2.default.createElement(
                 'div',
@@ -198,24 +197,29 @@ var Example = function (_React$Component) {
         }
     }, {
         key: 'call',
-        value: function call(change) {
+        value: function call(command) {
             this.setState({
-                value: this.state.value.change().call(change).value
+                value: this.editor.command(command).value
             });
         }
     }, {
         key: 'render',
         value: function render() {
+            var _this3 = this;
+
             return _react2.default.createElement(
                 'div',
                 null,
                 this.renderToolbar(),
                 _react2.default.createElement(_slateReact.Editor, {
+                    ref: function ref(editor) {
+                        return _this3.editor = editor;
+                    },
                     placeholder: 'Enter some text...',
                     plugins: plugins,
                     value: this.state.value,
                     onChange: this.onChange,
-                    renderNode: renderNode,
+                    renderBlock: renderBlock,
                     shouldNodeComponentUpdate: function shouldNodeComponentUpdate(props) {
                         return (
                             // To update the highlighting of nodes inside the selection
@@ -474,7 +478,7 @@ destKey) {
     var newSublist = _slate.Block.create({
         object: 'block',
         type: currentList.type,
-        data: currentList.data
+        data: {}
     });
 
     return editor.withoutNormalizing(function () {
